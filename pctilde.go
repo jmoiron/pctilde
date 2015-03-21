@@ -17,11 +17,11 @@ func main() {
 	default:
 		dir = strings.Join(os.Args[1:], " ")
 	}
-	var home string
+
+	// attempt to figure out the user's home dir
+	home := os.Getenv("HOME")
 	u, err := user.Current()
-	if err != nil {
-		home = os.Getenv("HOME")
-	} else {
+	if err == nil {
 		home = u.HomeDir
 	}
 
@@ -37,26 +37,25 @@ func main() {
 		if strings.Contains(strings.ToLower(key), "pwd") {
 			continue
 		}
-		// de-prioritize matching against the home dir
+
 		if strings.Contains(dir, value) {
 			path := strings.Replace(dir, value, "$"+key, 1)
 			candidates = append(candidates, path)
 		}
 	}
 
+	// special case the home dir to "~", which will always beat $HOME
 	if strings.Contains(dir, home) {
 		path := strings.Replace(dir, home, "~", 1)
 		candidates = append(candidates, path)
 	}
 
-	minLen := len(candidates[0])
-	minLenIndex := 0
-	for i, s := range candidates {
-		if len(s) < minLen {
-			minLenIndex = i
-			minLen = len(s)
+	min := candidates[0]
+	for _, s := range candidates {
+		if len(s) < len(min) {
+			min = s
 		}
 	}
 
-	fmt.Print(candidates[minLenIndex])
+	fmt.Print(min)
 }

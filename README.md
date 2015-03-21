@@ -12,7 +12,7 @@ by  the  name  of  the directory.  If it starts with $HOME, that
 part is replaced by a `~'.
 ```
 
-To use this in, eg, bash, add it to your path and then to your PS1 like this:
+To use this in eg. bash, add it to your path and then to your PS1 like this:
 
 ```bash
 PS1='..$(pctilde $(pwd))..'
